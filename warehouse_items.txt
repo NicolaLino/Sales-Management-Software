@@ -1,3 +1,4 @@
-0129;Orange Juice Bottles;20/1/2023;1.5;2;1200
-1121;apple juice bottles;27/8/2023;2;3;500
-4223;banana;9/9/2024;1;1.5;20
+129;Orange Juice Bottles;20/1/2023;1.5;2.0;1200
+1121;apple juice bottles;27/8/2023;2.0;3.0;500
+4223;banana;9/9/2024;1.0;1.5;20
+1234;nicola;2050;1000;2000;1
