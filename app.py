@@ -19,6 +19,20 @@ _________________________________\n
 Enter Command Number: 
             """)
         choice = is_integer(input())
+        if choice == 1:
+            try:
+                add_new_product()
+            except KeyError:
+                print("\nCode is not unique.")
+        if choice == 2:
+            try:
+                add_new_supermarket()
+            except KeyError:
+                print("\nCode is not unique.")
+
+
 
 if __name__ == '__main__':
+    read_warehouse_file()
     main()
+    write_warehouse_file()
