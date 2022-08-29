@@ -25,6 +25,9 @@ def main():
         elif choice == 5:
             warehouse_to_supermarkets()
         
+        elif choice == 6:
+            report()
+        
         elif choice == 7:
             write_warehouse_file()
             write_supermarket_file()

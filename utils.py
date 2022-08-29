@@ -76,7 +76,7 @@ def read_distribution_supermarkets():
         try:
             with open(path_id(id), "r") as f:
 
-                print(f"File: {id}")
+                # print(f"File: {id}")
 
                 file_data = f.read()
 
@@ -154,7 +154,8 @@ def add_new_supermarket():
     name = input("Enter Supermarket name: ")
     add = input("Enter Supermarket Address: ")
     d = datetime.now().strftime("%d/%m/%Y")
-    supermarket[code] = Supermarket(code=code, name=name, address=add, added_date=d)
+    supermarket[code] = Supermarket(
+        code=code, name=name, address=add, added_date=d)
     print(f"Supermarket Added Date: {supermarket[code].added_date}")
 
 
@@ -252,3 +253,24 @@ def warehouse_to_supermarkets():
     # write_distribution_supermarkets(code)
     print(supermarket[code].print_supermarket(pid))
     print("\nProduct Was Added To Supermarket Successfully.\n")
+
+
+''' 6. Generate a report about the sales status of the warehouse. '''
+
+
+def report():
+    whole_sum = 0
+    sale_sum = 0
+    profit = 0
+    for val in warehouse.values():
+        whole_sum += val.wholesale_cost
+        sale_sum += val.sales_cost
+
+    profit = sale_sum - whole_sum
+    print(f"\nNumber of items in the warehouse: {len(warehouse)}")
+    print(f"\nTotal wholesale cost of all items in the warehouse: {whole_sum}")
+    print(f"\nTotal sales cost of all items in the warehouse: {sale_sum}")
+    print(
+        f"\nExpected profit after selling all items in the warehouse: {profit}")
+
+
