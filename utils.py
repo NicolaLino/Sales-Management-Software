@@ -1,12 +1,14 @@
 from models import Product, Supermarket
-from typing import Dict, List
+from typing import Dict
+from os import getcwd, path
+from datetime import datetime, date
+
 
 warehouse: Dict[int, Product] = {}
 supermarket: Dict[int, Supermarket] = {}
 
 
 def read_warehouse_file():
-    from os import getcwd
 
     p = getcwd()
     try:
@@ -14,13 +16,19 @@ def read_warehouse_file():
             for line in f:
                 try:
                     code, name, ex_date, w_cost, s_cost, quantity = line.strip().split(';')
+                    warehouse[int(code)] = Product(int(code), name, ex_date,
+                                                   float(w_cost), float(s_cost), int(quantity))
                 except ValueError:
-                    return
-                warehouse[int(code)] = Product(int(code), name, ex_date,
-                                               float(w_cost), float(s_cost), int(quantity))
+                    print(
+                        "> There is invalid value in the 'warehouse_items.txt' please correct it and try again!!")
+                    exit()
     except FileNotFoundError:
-        print("There is No Product in the Warehouse")
+        print("There is No Products in the Warehouse Yet")
         return
+
+
+def path_id(id: int):
+    return path.join("DataBase", "DistributeItems_" + str(id) + ".txt")
 
 
 def write_warehouse_file():
@@ -28,6 +36,59 @@ def write_warehouse_file():
     with open("warehouse_items.txt", "w") as f:
         for key in warehouse.keys():
             f.write(f"{warehouse[int(key)]}\n")
+
+
+def read_supermarket_file():
+    p = getcwd()
+    try:
+        with open(f"{p}/supermarkets.txt", "r") as f:
+            for line in f:
+                try:
+                    code, name, address, d = line.strip().split(";")
+                    supermarket[int(code)] = Supermarket(
+                        int(code), name, address, d)
+                except ValueError:
+                    print(
+                        "> There is invalid value in the 'supermarkets.txt' please correct it and try again!!")
+                    exit()
+    except FileNotFoundError:
+        print("There is No Supermarkets Yet")
+        return
+
+
+def write_supermarket_file():
+
+    with open("supermarkets.txt", "w") as f:
+        for key in supermarket.keys():
+            f.write(f"{supermarket[int(key)]}\n")
+
+
+def write_distribution_supermarkets():
+    for id in [key for key in supermarket.keys()]:
+        with open(path_id(id), "w") as f:
+            for val in supermarket[id].items.values():
+                f.write(f"{val[0]};{val[1]}\n")
+
+
+def read_distribution_supermarkets():
+
+    for id in [key for key in supermarket.keys()]:
+        try:
+            with open(path_id(id), "r") as f:
+
+                print(f"File: {id}")
+
+                file_data = f.read()
+
+                if len(file_data) < 2:
+                    # print("File is empty")
+                    return
+
+                for line in f:
+                    code, quantity = [int(x) for x in line.strip().split(";")]
+                    supermarket[id].add_item(code, quantity)
+        except FileNotFoundError:
+            print(" ")
 
 
 def is_integer(s):
@@ -92,6 +153,102 @@ def add_new_supermarket():
 
     name = input("Enter Supermarket name: ")
     add = input("Enter Supermarket Address: ")
-
-    supermarket[code] = Supermarket(code=code, name=name, address=add)
+    d = datetime.now().strftime("%d/%m/%Y")
+    supermarket[code] = Supermarket(code=code, name=name, address=add, added_date=d)
     print(f"Supermarket Added Date: {supermarket[code].added_date}")
+
+
+''' 3. List of items in the warehouse based on expiry date  '''
+
+
+def search_by_date():
+    d, m, y = [int(x) for x in input(
+        "Enter a Specific Date 'in (DD/MM/YYYY) format': ").split('/')]
+    d = date(y, m, d)
+    whole_sum = 0
+    sale_sum = 0
+    print("List of Products: \n")
+    for val in warehouse.values():
+        exp = val.expiry_date
+        ed, em, ey = [int(x) for x in exp.split("/")]
+        exp = date(int(ey), int(em), int(ed))
+        if exp < d:
+            print(val.print_product())
+            whole_sum += val.wholesale_cost
+            sale_sum += val.sales_cost
+
+        else:
+            continue
+
+    print(f"\nThe total wholesale cost of these items: {whole_sum}")
+    print(f"The total wholesale cost of these items: {sale_sum}")
+
+
+''' 4. Clear an item from the warehouse  '''
+
+
+def clear_product():
+
+    code = is_integer(input("Enter Product ID: "))
+    if code is None or not Product.is_valid_code(code):
+        print("Invalid input")
+        return
+    if code not in warehouse:
+        print("Product with this ID does not exist ")
+        return
+
+    print(warehouse[code].print_product())
+    amount = int(input("Enter the Quantity you want to clear: "))
+    if amount >= warehouse[code].quantity:
+        del warehouse[code]
+        print("Product was Cleared Successfully .")
+    else:
+        warehouse[code].quantity -= amount
+        print("Quantity was updated")
+
+
+'''  5. Distribute products from the warehouse to a supermarket  '''
+
+
+def warehouse_to_supermarkets():
+    code = is_integer(input("Enter Supermarket ID: "))
+
+    if code is None or not Product.is_valid_code(code):
+        print("Invalid input")
+        return
+    if code not in supermarket:
+        print("Supermarket with this ID does not exist ")
+        return
+
+    pid = is_integer(input("Enter Product ID To Add it into Supermarket: "))
+    if pid is None or not Product.is_valid_code(pid):
+        print("Invalid input")
+        return
+    if pid not in warehouse:
+        print("Product with this ID does not exist ")
+        return
+    final = 0
+    print(warehouse[pid].print_product())
+    amount = int(
+        input("\nEnter the Quantity you want to Add to supermarket: "))
+
+    if pid not in [key for key in supermarket[code].items.keys()]:
+        if amount >= warehouse[pid].quantity:
+            final = warehouse[pid].quantity
+            del warehouse[pid]
+        else:
+            warehouse[pid].quantity -= amount
+            final = amount
+
+        supermarket[code].add_item(pid, final)
+    else:
+        if amount >= warehouse[pid].quantity:
+            supermarket[code].items[pid][1] += warehouse[pid].quantity
+            del warehouse[pid]
+        else:
+            warehouse[pid].quantity -= amount
+            supermarket[code].items[pid][1] += amount
+
+    # write_distribution_supermarkets(code)
+    print(supermarket[code].print_supermarket(pid))
+    print("\nProduct Was Added To Supermarket Successfully.\n")

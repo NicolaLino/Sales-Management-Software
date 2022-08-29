@@ -1,7 +1,7 @@
 ''' Python Classes '''
 
-from typing import List, Tuple
-from datetime import datetime
+from typing import List, Tuple, Dict
+
 
 
 class Product():
@@ -13,11 +13,6 @@ class Product():
         self.wholesale_cost = wholesale_cost
         self.sales_cost = sales_cost
         self.quantity = quantity
-
-
-    def __str__(self) -> str:
-        # return f"Code : {self.code}, Name: {self.name}, Expiry Date: {self.expiry_date}, Wholesale Cost: {self.wholesale_cost}, Sales Cost: {self.sales_cost}, Quantity: {self.quantity}"
-        return f"{self.code};{self.name};{self.expiry_date};{self.wholesale_cost};{self.sales_cost};{self.quantity}"
 
     @staticmethod
     def is_valid_code(code_str):
@@ -31,22 +26,34 @@ class Product():
             return code
         return None
 
+    def __str__(self) -> str:
+        return f"{self.code};{self.name};{self.expiry_date};{self.wholesale_cost};{self.sales_cost};{self.quantity}"
+
+    def print_product(self):
+        return f"Code : {self.code}, Name: {self.name}, Expiry Date: {self.expiry_date}, Wholesale Cost: {self.wholesale_cost}, Sales Cost: {self.sales_cost}, Quantity: {self.quantity}"
+
 
 class Supermarket():
-    def __init__(self, code: int, name: str, address: str, items: Product = None) -> None:
+    def __init__(self, code: int, name: str, address: str, added_date: str, items: Dict[int, list] = None) -> None:
         self.code = code
         self.name = name
         self.address = address
-        self.added_date = datetime.now().strftime("%d/%m/%Y")
+        self.added_date = added_date
         if items is None:
-            self.items = []
+            self.items: Dict[int, list] = {}
         else:
             self.items = items
 
-    def add_item(self, itm):
-        if itm not in self.items:
-            self.items.append(itm)
+    def add_item(self, pid: int, q: int):
+        if pid not in self.items:
+            self.items[pid] = [pid, q]
 
-    def remove_item(self, itm):
-        if itm in self.items:
-            self.items.remove(itm)
+    def remove_item(self, id):
+        if id in self.items:
+            del self.items[id]
+
+    def __str__(self) -> str:
+        return f"{self.code};{self.name};{self.address};{self.added_date}"
+
+    def print_supermarket(self, id):
+        return f"Code : {self.code}, Name: {self.name}, Address: {self.address}, items[ code: {id}, quantity: {self.items[id][1]}]"
