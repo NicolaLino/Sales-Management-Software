@@ -234,24 +234,62 @@ def warehouse_to_supermarkets():
         input("\nEnter the Quantity you want to Add to supermarket: "))
 
     if pid not in [key for key in supermarket[code].items.keys()]:
-        if amount >= warehouse[pid].quantity:
+        if amount == warehouse[pid].quantity:
             final = warehouse[pid].quantity
             del warehouse[pid]
+        elif amount > warehouse[pid].quantity:
+            print("There is no Enough Quantity in the Warhorse")
+            return
         else:
             warehouse[pid].quantity -= amount
             final = amount
 
         supermarket[code].add_item(pid, final)
     else:
-        if amount >= warehouse[pid].quantity:
+        if amount == warehouse[pid].quantity:
             supermarket[code].items[pid][1] += warehouse[pid].quantity
             del warehouse[pid]
+        elif amount > warehouse[pid].quantity:
+            print("There is no Enough Quantity in the Warhorse")
+            return
         else:
             warehouse[pid].quantity -= amount
             supermarket[code].items[pid][1] += amount
 
     # write_distribution_supermarkets(code)
     print(supermarket[code].print_supermarket(pid))
+    print("\nProduct Was Added To Supermarket Successfully.\n")
+
+
+def distribute_form_file():
+    code = is_integer(input("Enter Supermarket ID: "))
+
+    if code is None or not Product.is_valid_code(code):
+        print("Invalid input")
+        return
+    if code not in supermarket:
+        print("Supermarket with this ID does not exist ")
+        return
+    try:
+        with open(path_id(code), "r") as f:
+            for line in f:
+                pid, q = [int(x) for x in line.strip().split(";")]
+                if pid in warehouse:
+                    if q <= warehouse[pid].quantity:
+                        warehouse[pid].quantity -= q
+                        supermarket[code].add_item(pid, q)
+                    else:
+                        supermarket[code].add_item(
+                            pid, warehouse[pid].quantity)
+                        print(
+                            f"\nProduct [code: {pid}, name: {warehouse[pid].name}, Available: {warehouse[pid].quantity} ] Requested Amount: [{q}]")
+                        warehouse[pid].quantity = 0
+                else:
+                    print(f"Product with ID:{pid} is not Available")
+
+    except FileNotFoundError:
+        print("File Not Found")
+        return
     print("\nProduct Was Added To Supermarket Successfully.\n")
 
 
@@ -272,5 +310,3 @@ def report():
     print(f"\nTotal sales cost of all items in the warehouse: {sale_sum}")
     print(
         f"\nExpected profit after selling all items in the warehouse: {profit}")
-
-

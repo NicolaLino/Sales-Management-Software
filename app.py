@@ -23,7 +23,14 @@ def main():
             clear_product()
         
         elif choice == 5:
-            warehouse_to_supermarkets()
+            print_menu_5()
+            c = is_integer(input("Enter Command Number: "))
+            if c == 1:
+                distribute_form_file()
+            elif c == 2:
+                warehouse_to_supermarkets()
+            else:
+                print("\nEnter a Valid Input From Menu")
         
         elif choice == 6:
             report()
@@ -51,6 +58,14 @@ _________________________________________________________________
 | 5- Distribute products from the warehouse to a supermarket.   |
 | 6- Generate a report about the sales status of the warehouse. |
 | 7- Exit                                                       |
+|_______________________________________________________________|
+            """)
+
+def print_menu_5():
+    print("""\n 
+________________________________________________________________
+| 1- Distribute Form File.                                      |
+| 2- Distribute Manually.                                       |
 |_______________________________________________________________|
             """)
 
