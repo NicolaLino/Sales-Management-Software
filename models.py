@@ -1,11 +1,10 @@
-''' Python Classes '''
 
-from typing import List, Tuple, Dict
+from typing import List, Dict
 
 
 
 class Product():
-
+    ''' Class for products in the warehouse '''
     def __init__(self, code: int, name: str, expiry_date: str, wholesale_cost: float, sales_cost: float, quantity: int) -> None:
         self.code = code
         self.name = name
@@ -34,6 +33,7 @@ class Product():
 
 
 class Supermarket():
+    ''' class for supermarket '''
     def __init__(self, code: int, name: str, address: str, added_date: str, items: Dict[int, list] = None) -> None:
         self.code = code
         self.name = name

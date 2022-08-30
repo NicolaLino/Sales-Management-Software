@@ -285,7 +285,7 @@ def distribute_form_file():
                             f"\nProduct [code: {pid}, name: {warehouse[pid].name}, Available: {warehouse[pid].quantity} ] Requested Amount: [{q}]")
                         warehouse[pid].quantity = 0
                 else:
-                    print(f"Product with ID:{pid} is not Available")
+                    print(f"Product with ID:[{pid}] and Requested Amount:[{q}] is not Available in the Warehouse")
 
     except FileNotFoundError:
         print("File Not Found")
