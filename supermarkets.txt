@@ -2,3 +2,4 @@
 1122;wallmart;beit jala;29/08/2022
 5983;bestbuy;bethlehem;29/08/2022
 9827;george market;bethlehem;29/08/2022
+9876;supermarket;birzeit;30/08/2022
