@@ -10,9 +10,8 @@ supermarket: Dict[int, Supermarket] = {}
 
 def read_warehouse_file():
 
-    p = getcwd()
     try:
-        with open(f"{p}/warehouse_items.txt", "r") as f:
+        with open("DataBase/warehouse_items.txt", "r") as f:
             for line in f:
                 try:
                     code, name, ex_date, w_cost, s_cost, quantity = line.strip().split(';')
@@ -33,7 +32,7 @@ def path_id(id: int):
 
 def write_warehouse_file():
 
-    with open("warehouse_items.txt", "w") as f:
+    with open("DataBase/warehouse_items.txt", "w") as f:
         for key in warehouse.keys():
             f.write(f"{warehouse[int(key)]}\n")
 
@@ -41,7 +40,7 @@ def write_warehouse_file():
 def read_supermarket_file():
     p = getcwd()
     try:
-        with open(f"{p}/supermarkets.txt", "r") as f:
+        with open("DataBase/supermarkets.txt", "r") as f:
             for line in f:
                 try:
                     code, name, address, d = line.strip().split(";")
@@ -58,7 +57,7 @@ def read_supermarket_file():
 
 def write_supermarket_file():
 
-    with open("supermarkets.txt", "w") as f:
+    with open("DataBase/supermarkets.txt", "w") as f:
         for key in supermarket.keys():
             f.write(f"{supermarket[int(key)]}\n")
 
