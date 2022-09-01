@@ -181,7 +181,7 @@ def search_by_date():
             continue
 
     print(f"\nThe total wholesale cost of these items: {whole_sum}")
-    print(f"The total wholesale cost of these items: {sale_sum}")
+    print(f"The total sale cost of these items: {sale_sum}")
 
 
 ''' 4. Clear an item from the warehouse  '''
