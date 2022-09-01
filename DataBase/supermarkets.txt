@@ -3,3 +3,4 @@
 5983;bestbuy;bethlehem;29/08/2022
 9827;george market;bethlehem;29/08/2022
 9876;supermarket;birzeit;30/08/2022
+5555;loai market;ramallah;01/09/2022
